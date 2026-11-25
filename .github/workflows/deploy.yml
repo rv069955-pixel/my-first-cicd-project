@@ -1,0 +1,48 @@
+
+name: My First CI CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v6
+
+      - name: Check Website File
+        run: |
+          test -f site/index.html
+          echo "Website file found successfully"
+
+      - name: Validate HTML Content
+        run: |
+          grep -q "<title>" site/index.html
+          grep -q "<h1>" site/index.html
+          echo "HTML validation successful"
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Website Artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy Website
+        uses: actions/deploy-pages@v4
