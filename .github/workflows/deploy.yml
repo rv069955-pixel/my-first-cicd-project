@@ -1,7 +1,12 @@
+
 name: My First CI CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+
+  pull_request:
     branches:
       - main
 
@@ -34,14 +39,17 @@ jobs:
           echo "HTML validation successful"
 
       - name: Setup GitHub Pages
+        if: github.event_name == 'push'
         uses: actions/configure-pages@v5
 
       - name: Upload Website Artifact
+        if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v4
         with:
           path: site
 
   deploy:
+    if: github.event_name == 'push'
     needs: build-and-upload
     runs-on: ubuntu-latest
 
