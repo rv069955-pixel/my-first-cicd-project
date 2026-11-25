@@ -1,4 +1,3 @@
-
 name: My First CI CD Pipeline
 
 on:
@@ -30,8 +29,8 @@ jobs:
 
       - name: Validate HTML Content
         run: |
-          grep -q "&lt;title&gt;" site/index.html
-          grep -q "&lt;h1&gt;" site/index.html
+          grep -q "<title>" site/index.html
+          grep -q "<h1>" site/index.html
           echo "HTML validation successful"
 
       - name: Setup GitHub Pages
